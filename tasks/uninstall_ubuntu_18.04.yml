@@ -4,7 +4,7 @@
     name: moloch
     state: absent
 
-- name: Remove entire installation directory 
+- name: Remove entire installation directory
   file:
     path: "{{ moloch_install_dir }}/"
     state: absent
@@ -14,7 +14,7 @@
     paths: /etc/systemd/system/
     patterns: moloch*
   register: moloch_systemd_files
-  
+
 - name: Ensure all moloch systemd files are deleted
   file:
     path: "{{ item.path }}"

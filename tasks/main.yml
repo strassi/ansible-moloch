@@ -10,4 +10,3 @@
 - name: Starting moloch uninstaller
   include_tasks: "uninstall_{{ ansible_distribution | lower}}_{{ ansible_distribution_version }}.yml"
   when: moloch_uninstall
-  
