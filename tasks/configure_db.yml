@@ -1,0 +1,26 @@
+---
+- name: Check if elasticsearch cluster is available
+  uri:
+    url: "http://{{ moloch_elasticsearch }}:9200/_cluster/health"
+    timeout: 30
+    status_code: 200
+  retries: 5    # 10 * 5 seconds
+  delay: 10    # seconds
+
+# Get "DB Version" output
+- name: Get moloch database from the connected elasticsearch cluster
+  command: "/data/moloch/db/db.pl http://{{ moloch_elasticsearch }}:9200 info"
+  register: moloch_db_status
+  changed_when: false
+
+# Only if db/db.pl output DB Version is set to -1
+- name: Initialize elasticsearch cluster
+  expect:
+    echo: True
+    command: "/data/moloch/db/db.pl http://{{ moloch_elasticsearch }}:9200 init"
+    responses:
+      (?i)erase: "INIT"
+  when: moloch_db_status.stdout_lines[2] is search("-1")
+
+- name: Setup inital admin user with provided default credentials
+  command: "/data/moloch/bin/moloch_add_user.sh {{ moloch_admin_user }} 'Admin User' {{ moloch_admin_password }} --admin"

@@ -1,0 +1,71 @@
+---
+- name: Ensure Ansible requirements are met on the system
+  apt:
+    pkg:
+      - xz-utils
+      - python3-pexpect
+    state: present
+    update_cache: true
+
+- name: Download and install ubuntu moloch deb
+  apt:
+    deb: "{{ moloch_deb_url }}"
+    state: present
+
+- name: Ensure logs directory is present and has the correct permissions
+  file:
+    path: "{{ moloch_install_dir}}/logs"
+    state: directory
+    owner: nobody
+    group: root
+    mode: 0700
+
+- name: Ensure raw directory (pcaps) is present and has the correct permissions
+  file:
+    path: "{{ moloch_install_dir }}/raw"
+    state: directory
+    owner: nobody
+    group: root
+    mode: 0700
+
+- name: Ensure correct configuration file is present
+  template:
+    src: templates/config.ini.j2
+    dest: /data/moloch/etc/config.ini
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+   - Restart molochcapture
+   - Restart molochviewer
+
+- name: Ensure the lastest GEO IP information is present
+  command: "bash {{ moloch_install_dir }}/bin/moloch_update_geo.sh"
+  args:
+    creates: "*.mmdb"
+
+- name: Find systemd service files
+  find:
+    paths: "{{ moloch_install_dir }}/etc/"
+    patterns: '*.systemd.service'
+  register: systemd_files
+
+- name: Ensure correct moloch installation path in the systemd files
+  replace:
+    path: "{{ item.path }}"
+    regexp: "MOLOCH_INSTALL_DIR"
+    replace: "{{ moloch_install_dir }}"
+  with_items: "{{ systemd_files.files }}"
+
+- name: Ensure systemd service files are present in /etc/systemd/system
+  copy:
+    src: "{{ item.path }}"
+    dest: "/etc/systemd/system/{{ item.path.split('.systemd')[0] | basename }}.service"
+    owner: root
+    group: root
+    mode: 0644
+    remote_src: True
+  with_items: "{{ systemd_files.files }}"
+  notify:
+    - Restart molochcapture
+    - Restart molochviewer

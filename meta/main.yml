@@ -1,0 +1,35 @@
+---
+galaxy_info:
+  author: David Strassegger
+  description: Moloch Capture and Viewer installation / uninstallion
+
+  # If the issue tracker for your role is not on github, uncomment the
+  # next line and provide a value
+  # issue_tracker_url: http://example.com/issue/tracker
+
+  # Some suggested licenses:
+  # - BSD (default)
+  # - MIT
+  # - GPLv2
+  # - GPLv3
+  # - Apache
+  # - CC-BY
+  license: license (GPLv2, CC-BY)
+
+  min_ansible_version: 2.4
+
+  # min_ansible_container_version:
+
+  # github_branch:
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - 18.04
+  galaxy_tags:
+    - security
+    - networking
+    - monitoring
+    - moloch
+
+dependencies: []

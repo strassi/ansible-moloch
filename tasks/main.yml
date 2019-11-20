@@ -1,0 +1,13 @@
+---
+- name: Starting moloch setup
+  include_tasks: "install_{{ ansible_distribution | lower}}_{{ ansible_distribution_version }}.yml"
+  when: moloch_uninstall == false
+
+- name: Starting elasticsearch setup
+  include_tasks: "configure_db.yml"
+  when: moloch_uninstall == false
+
+- name: Starting moloch uninstaller
+  include_tasks: "uninstall_{{ ansible_distribution | lower}}_{{ ansible_distribution_version }}.yml"
+  when: moloch_uninstall == true
+  

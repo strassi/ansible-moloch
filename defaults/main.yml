@@ -1,0 +1,16 @@
+---
+# installation specific variables
+moloch_uninstall: false
+moloch_version: "2.0.1-1"
+
+# moloch settings
+moloch_elasticsearch: "localhost"
+moloch_interface: "eth0"
+moloch_bpf: ""
+moloch_password_secret: "defaultpassword"
+moloch_admin_user: "admin"
+moloch_admin_password: "admin"
+
+# you might no need to edit these settings
+moloch_install_dir: "/data/moloch"
+moloch_deb_url: "https://files.molo.ch/builds/{{ ansible_distribution | lower }}-{{ ansible_distribution_version }}/moloch_{{ moloch_version }}_amd64.deb"
