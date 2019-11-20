@@ -19,4 +19,4 @@
   file:
     path: "{{ item.path }}"
     state: absent
-  with_items: "{{ moloch_systemd_files.files }}"
+  with_items: "{{ moloch_systemd_files.files }}"
