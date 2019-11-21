@@ -24,3 +24,4 @@
 
 - name: Setup inital admin user with provided default credentials
   command: "/data/moloch/bin/moloch_add_user.sh {{ moloch_admin_user }} 'Admin User' {{ moloch_admin_password }} --admin"
+  when: moloch_db_status.stdout_lines[2] is search("-1")
