@@ -2,4 +2,4 @@
 - hosts: localhost
   become: True
   roles:
-    - roles/moloch-capture
+    - roles/ansible-moloch
